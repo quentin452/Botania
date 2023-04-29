@@ -206,20 +206,20 @@ public class InventoryHelper {
 		return slots;
 	}
 
-    public static ItemStack cycleItemStackForDisplay(Object input) {
-        if (input instanceof ItemStack) return (ItemStack) input;
-        List<ItemStack> items = null;
-        if (input instanceof List) {
-            items = (List<ItemStack>) input;
-        } else if (input instanceof String) {
-            items = OreDictionary.getOres((String) input);
-        }
-        if (items != null && items.size() > 0) {
-            int index = (int) (System.currentTimeMillis() / 1000L % items.size());
-            return items.get(index);
-        }
-        return null;
-    }
+	public static ItemStack cycleItemStackForDisplay(Object input) {
+		if (input instanceof ItemStack) return (ItemStack) input;
+		List<ItemStack> items = null;
+		if (input instanceof List) {
+			items = (List<ItemStack>) input;
+		} else if (input instanceof String) {
+		items = OreDictionary.getOres((String) input);
+		}
+		if (items != null && items.size() > 0) {
+			int index = (int) (System.currentTimeMillis() / 1000L % items.size());
+			return items.get(index);
+		}
+		return null;
+	}
 
 	public static class GenericInventory implements IInventory {
 
