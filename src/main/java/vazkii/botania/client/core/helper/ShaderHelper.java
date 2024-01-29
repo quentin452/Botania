@@ -13,6 +13,8 @@ package vazkii.botania.client.core.helper;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.Map;
 
 import net.minecraft.client.renderer.OpenGlHelper;
 
@@ -60,18 +62,24 @@ public final class ShaderHelper {
 		categoryButton = createProgram(null, LibResources.SHADER_CATEGORY_BUTTON_FRAG);
 	}
 
+	private static Map<Integer, Integer> shaderUniformLocations = new HashMap<>();
+
 	public static void useShader(int shader, ShaderCallback callback) {
-		if(!useShaders())
+		if (!useShaders())
 			return;
 
-		ARBShaderObjects.glUseProgramObjectARB(shader);
-
-		if(shader != 0) {
-			int time = ARBShaderObjects.glGetUniformLocationARB(shader, "time");
-			ARBShaderObjects.glUniform1iARB(time, ClientTickHandler.ticksInGame);
-
-			if(callback != null)
+		if (shader != 0) {
+			Integer timeLocation = shaderUniformLocations.get(shader);
+			if (timeLocation == null) {
+				timeLocation = ARBShaderObjects.glGetUniformLocationARB(shader, "time");
+				shaderUniformLocations.put(shader, timeLocation);
+			}
+			ARBShaderObjects.glUseProgramObjectARB(shader);
+			ARBShaderObjects.glUniform1iARB(timeLocation, ClientTickHandler.ticksInGame);
+			if (callback != null)
 				callback.call(shader);
+		} else {
+			ARBShaderObjects.glUseProgramObjectARB(0);
 		}
 	}
 
